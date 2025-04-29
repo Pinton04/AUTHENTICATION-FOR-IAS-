@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  <style>
+    body { font-family: Arial; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .container { width: 300px; }
+    input, button { width: 100%; padding: 8px; margin: 5px 0; }
+    .toggle-password { cursor: pointer; position: absolute; right: 10px; top: 38px; }
+    .relative { position: relative; }
+    a { display: block; text-align: center; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Login</h2>
+    <div class="relative">
+      <input type="email" id="login-email" placeholder="Email" required />
+    </div>
+    <div class="relative">
+      <input type="password" id="login-password" placeholder="Password" required />
+    </div>
+    <button onclick="login()">Login</button>
+    <a href="register.html">Register</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabase = supabase.createClient(
+      'https://jiglvdqdgkvpwamthsax.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppZ2x2ZHFkZ2t2cHdhbXRoc2F4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4MDU2MzksImV4cCI6MjA2MTM4MTYzOX0.4o03nHx2NGcpeUssKYz24T8aLI1cS5J45vLv8T6kjpo'
+    );
+
+    async function login() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        alert('Login error: ' + error.message);
+      } else {
+        // ✅ Log the login event
+        await supabase.from('login_logs').insert([
+          {
+            user_id: data.user.id,
+            email: email
+          }
+        ]);
+
+        window.location.href = 'dashboard.html';
+      }
+    }
+  </script>
+</body>
+</html>

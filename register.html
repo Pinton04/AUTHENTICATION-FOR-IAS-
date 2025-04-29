@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register</title>
+  <style>
+    body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .container { width: 300px; }
+    input, button { width: 100%; padding: 8px; margin: 5px 0; }
+    .toggle-password { cursor: pointer; position: absolute; right: 10px; top: 38px; }
+    .relative { position: relative; }
+    a { display: block; text-align: center; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Register</h2>
+    <div class="relative">
+      <input type="email" id="register-email" placeholder="Email" required />
+    </div>
+    <div class="relative">
+      <input type="password" id="register-password" placeholder="Password" required />
+      <span class="toggle-password" onclick="togglePassword('register-password')"span>
+    </div>
+    <button onclick="register()">Register</button>
+    <a href="login.html">Back to Login</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // Ensure supabase client is correctly initialized
+  const { createClient } = supabase;
+  const supabaseClient = createClient(
+    'https://jiglvdqdgkvpwamthsax.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppZ2x2ZHFkZ2t2cHdhbXRoc2F4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4MDU2MzksImV4cCI6MjA2MTM4MTYzOX0.4o03nHx2NGcpeUssKYz24T8aLI1cS5J45vLv8T6kjpo'
+  );
+
+  // Check if supabaseClient is initialized correctly
+  console.log(supabaseClient);
+
+  // Register function
+  async function register() {
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
+
+    // Check if supabaseClient is available before calling the signUp method
+    if (!supabaseClient || !supabaseClient.auth) {
+      console.error("Supabase client is not initialized properly.");
+      return;
+    }
+
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: 'http://localhost:5500/register.html'  // Update to your hosted URL
+      }
+    });
+
+    if (error) {
+      alert('Registration error: ' + error.message);
+    } else {
+      alert('Registration successful! Please check your email for a verification link before logging in.');
+      window.location.href = 'login.html';
+    }
+  }
+</script>

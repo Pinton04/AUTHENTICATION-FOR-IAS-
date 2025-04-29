@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; display: flex; }
+    .sidebar { width: 200px; background-color: #f0f0f0; padding: 20px; }
+    .content { flex-grow: 1; padding: 20px; }
+    button { width: 100%; padding: 8px; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <button onclick="logout()">Logout</button>
+  </div>
+  <div class="content">
+    <h2>AUTHORIZATION SUCCESSFUL</h2>
+    <p>Welcome to your dashboard!</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabase = supabase.createClient(
+      'https://jiglvdqdgkvpwamthsax.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppZ2x2ZHFkZ2t2cHdhbXRoc2F4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4MDU2MzksImV4cCI6MjA2MTM4MTYzOX0.4o03nHx2NGcpeUssKYz24T8aLI1cS5J45vLv8T6kjpo'
+    );
+
+    async function logout() {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        alert('Logout error: ' + error.message);
+      } else {
+        window.location.href = 'login.html';
+      }
+    }
+  </script>
+</body>
+</html>
